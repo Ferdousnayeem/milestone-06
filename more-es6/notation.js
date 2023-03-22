@@ -17,4 +17,8 @@ const chemistry = student['marks']['chemistry'];
 const subject = 'math';
 const subjectMarks = student.marks[subject];
 const marks2 = student.marks[subject];
+console.log(marks);
+console.log(math);
+console.log(chemistry);
+console.log(subjectMarks);
 console.log(marks2);
