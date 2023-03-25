@@ -44,3 +44,21 @@ console.log(marks2);
 
 
 
+//Array & Object Destructuring
+const student = {
+    name: "abul",
+    age: 18,
+    class: 12,
+    score: 786,
+    height: 158
+}
+
+
+const [first, second, third] = [12, 23, 65, 58];;
+
+
+// const age = student.age;
+// // or
+// const {age, score, name} = student;
+// console.log(score, name);
+console.log(first+third);
