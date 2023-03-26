@@ -26,6 +26,23 @@
     <section id="country-detail"></section>
     <div id="flag"></div>
 
+    <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="meal-recipe" class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
     <script>
         const loadData = () => {
@@ -44,7 +61,10 @@
                 countryFlag.innerHTML = `
                 <h5>Name: ${country.name.common}</h5>
                 <p>Capital: ${country.capital ? country.capital[0] : 'No Capital Found'}</p>
-                <button class='btn btn-primary' onclick="getCountryDetails('${country.cca2}')" data-toggle="modal" data-target="#exampleModalCenter">Details</button>
+                <!-- Button trigger modal -->
+                <button onclick="getCountryDetails('${country.cca2}')" type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  Get Full Recipe
+                </button>
                 `;
                 flag.appendChild(countryFlag)
             });
@@ -59,10 +79,12 @@
 
         const displayCountryDetails = (country) => {
             console.log(country);
+            const nameContainer = document.getElementById('country-Name');
             const detailContainer = document.getElementById('country-detail');
+            nameContainer.innerText = ${country.name.common};
             detailContainer.innerHTML = `
-            <h5>Name: ${country.name.common}</h5>
             <img src="${country.flags.png}"/>
+            <h5>Capital: ${country.name.common} </h5>
             `
         }
 

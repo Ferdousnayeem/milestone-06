@@ -74,9 +74,9 @@
                         </div>
                         <div class="card-footer">
                             <!-- Button trigger modal -->
-<button onclick="getMealDetail(${meal.idMeal})" type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Get Full Recipe
-  </button>
+                        <button onclick="getMealDetail(${meal.idMeal})" type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                          Get Full Recipe
+                        </button>
                         </div>
                 </div>
                 `;
@@ -94,7 +94,7 @@
             const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`
             fetch(url)
             .then(response => response.json())
-            .then(data => showMealDetail(data.meals))
+            .then(data => showMealDetail(data.meals[0]))
         }
 
         const showMealDetail = (recipe) => {
@@ -102,10 +102,10 @@
             const details = document.getElementById('meal-recipe');
             const modalTitle = document.getElementById('exampleModalLabel');
             details.innerHTML = `
-            <img class="img-fluid" src="${recipe[0].strMealThumb}">
-            <p class="mt-2">${recipe[0].strInstructions}</p>
+            <img class="img-fluid" src="${recipe.strMealThumb}">
+            <p class="mt-2">${recipe.strInstructions}</p>
             `;
-            modalTitle.innerText = recipe[0].strMeal;
+            modalTitle.innerText = recipe.strMeal;
         }
         
 
