@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <title>Ki khamu?</title>
+    <style>
+        section{
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body class="m-4">
+
+        <header>
+            <h2>Khida lagse, Ki khamu?</h2>
+        </header>
+        <main>
+            <section class="d-flex">
+                <input id="search-field" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button id="search-button" class="btn btn-outline-success" onclick="searchMeal()" type="submit">Search</button>
+            </section>
+            <section>
+                <div id="meals" class="row row-cols-1 row-cols-md-4 g-4">
+                    
+                </div>
+            </section>
+            
+  
+  
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="meal-recipe" class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+        </main>
+    <script>
+
+        const getMeal = (searchText) => {
+            const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchText}`
+            fetch(url)
+            .then(response => response.json())
+            .then(data => displayMeal(data.meals))
+        }
+
+        const displayMeal = (meals) => {
+            console.log(meals)
+            const mealsContainer = document.getElementById('meals');
+            mealsContainer.innerHTML = '';
+            meals.forEach(meal => {
+                console.log(meal);
+                const mealDiv = document.createElement('div')
+                mealDiv.classList.add('col')
+                mealDiv.innerHTML = `
+                <div class="card h-100">
+                        <img src="${meal.strMealThumb}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                          <h5 class="card-title">${meal.strMeal}</h5>
+                          <p class="card-text">${meal.strInstructions.slice(0, 100)}...</p>
+                        </div>
+                        <div class="card-footer">
+                            <!-- Button trigger modal -->
+<button onclick="getMealDetail(${meal.idMeal})" type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Get Full Recipe
+  </button>
+                        </div>
+                </div>
+                `;
+                mealsContainer.appendChild(mealDiv)
+            });
+        }
+
+        const searchMeal = () => {
+            const searchText = document.getElementById('search-field').value;
+            console.log(searchText);
+            getMeal(searchText);
+        }
+
+        const getMealDetail = (idMeal) => {
+            const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`
+            fetch(url)
+            .then(response => response.json())
+            .then(data => showMealDetail(data.meals))
+        }
+
+        const showMealDetail = (recipe) => {
+            console.log(recipe);
+            const details = document.getElementById('meal-recipe');
+            const modalTitle = document.getElementById('exampleModalLabel');
+            details.innerHTML = `
+            <img class="img-fluid" src="${recipe[0].strMealThumb}">
+            <p class="mt-2">${recipe[0].strInstructions}</p>
+            `;
+            modalTitle.innerText = recipe[0].strMeal;
+        }
+        
+
+        getMeal('egg');
+        
+    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+    
+</body>
+</html>
