@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bideshi beda</title>
+</head>
+<body>
+
+    
+
+    <h1>looking for bideshi vodro lok</h1>
+    <span id="image"></span>
+    <h2>Name: <span id="name"></span> </h2>
+    <h3>Gender: <span id="gender"></span></h3>
+    <h5>location: <span id="location"></span></h5>
+
+    <script>
+
+        const loadUser = () => {
+            fetch('https://randomuser.me/api/?gender=male')
+            .then(response => response.json())
+            .then(data => displayUser(data))
+        }
+
+        const displayUser = user => {
+            const picture = document.getElementById('image');
+            const genderTag = document.getElementById('gender');
+            const nameTag = document.getElementById('name');
+            const location = document.getElementById('location');
+            genderTag.innerText = user.results[0].gender; 
+            nameTag.innerText = user.results[0].name.title + ' ' + user.results[0].name.first + ' ' + user.results[0].name.last;
+            picture.innerHTML = `
+            <img src="${user.results[0].picture.large}" alt="">
+            `;
+            location.innerText = user.results[0].location.street.name + ', ' + user.results[0].location.city
+            console.log(user.results[0]);
+             
+        }
+
+        loadUser();
+    </script>
+</body>
+</html>
