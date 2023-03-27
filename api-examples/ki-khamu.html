@@ -27,9 +27,6 @@
                 </div>
             </section>
             
-  
-  
-  
   <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -86,7 +83,7 @@
 
         const searchMeal = () => {
             const searchText = document.getElementById('search-field').value;
-            console.log(searchText);
+            // console.log(searchText);
             getMeal(searchText);
         }
 
@@ -98,7 +95,7 @@
         }
 
         const showMealDetail = (recipe) => {
-            console.log(recipe);
+            // console.log(recipe);
             const details = document.getElementById('meal-recipe');
             const modalTitle = document.getElementById('exampleModalLabel');
             details.innerHTML = `
