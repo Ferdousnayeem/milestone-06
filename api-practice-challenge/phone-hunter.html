@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <title>Phone Hunter</title>
+  </head>
+  <body class="container">
+
+    <header>
+        <h1>Hello, world!</h1>
+        <div class="my-3">
+            <input id="search-field" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button id="search-button" class="btn btn-outline-success my-2" type="button">Search</button>
+        </div>
+    </header>
+
+    <main>
+        <div id="phone-container" class="row row-cols-1 row-cols-md-4 g-4">
+        
+        </div>
+
+        <!-- Error Message -->
+        <div id="not-found-msg" class="mt-3 d-none">
+            <h3 id="display-error" class="text-danger">No Phone Found. Please try with a phone name.</h3>
+        </div>
+
+        <!-- show all button -->
+        <div id="show-all" class="my-3 text-center d-none">
+            <button id="" class="btn btn-success my-2" type="button">Show All</button>
+        </div>
+
+        <!-- spinner -->
+        <section id="loader" class="d-none">
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border text-success" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </section>
+        <section>
+            <!-- Button trigger modal -->
+            
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="phone-name">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="image-body">
+                            
+                        </div>
+                        <div class="details">
+                            <p>Chipset: <span id="chipset"></span> </p>
+                            <p>Display: <span id="display"></span> </p>
+                            <p>Memory: <span id="memory"></span> </p>
+                            <p>Storage: <span id="storage"></span> </p>
+                            <p>Sensor: <span id="sensor"></span> </p>
+                            <p>Release Date: <span id="released-date"></span> </p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <script>
+        const loadPhone = async(searchText, dataLimit) => {
+            const url = `https://openapi.programming-hero.com/api/phones?search=${searchText}`
+            const res = await fetch(url);
+            const data = await res.json();
+            showData(data.data, dataLimit);
+        }
+
+        const showData = (phones, dataLimit) => {
+            // console.log(phones);
+            const phoneContainer = document.getElementById('phone-container')
+            phoneContainer.innerText = '';
+            const showAllButton = document.getElementById('show-all');
+            if (dataLimit && phones.length > 4) {
+                // display specific number of phones
+                phones = phones.slice(0, 4);
+                showAllButton.classList.remove('d-none')
+            } else {
+                showAllButton.classList.add('d-none')
+            }
+            // display error message
+            const notFoundMsg = document.getElementById('not-found-msg');
+            if (phones.length === 0) {
+                notFoundMsg.classList.remove('d-none')
+            } else {
+                notFoundMsg.classList.add('d-none')
+            }
+            // display all phones
+            phones.forEach(phone => {
+                console.log(phone);
+                const phoneDiv = document.createElement('div');
+                phoneDiv.classList.add('col');
+                phoneDiv.innerHTML = `
+                <div class="card p-2 h-100">
+                <img src="${phone.image}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                    <h5 class="card-title">${phone.phone_name}</h5>
+                    </div>
+                    <div class="card-footer text-center">
+                        <button onclick="loadPhoneDetails('${phone.slug}')" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">Phone Details</button>
+                    </div>
+                </div>
+                `;
+                phoneContainer.appendChild(phoneDiv);
+            });
+            // stop spinner
+            toggleSpinner(false);
+        }
+
+        const processSearch = (dataLimit) =>{
+            // start spinner
+            toggleSpinner(true);
+            const searchField = document.getElementById('search-field');
+            const searchText = searchField.value;
+            loadPhone(searchText, dataLimit);
+            // searchField.value = '';
+        }
+
+        document.getElementById('search-button').addEventListener('click', function(){
+            processSearch(4);
+        })
+        
+        document.getElementById('search-field').addEventListener('keydown', function(event){
+            if (event.key === 'Enter') {
+                processSearch(4);
+            }
+        })
+
+        const toggleSpinner = isLoading => {
+            const loaderSection = document.getElementById('loader')
+            if (isLoading) {
+                loaderSection.classList.remove('d-none')
+            } else {
+                loaderSection.classList.add('d-none')
+            }
+        }
+
+
+        document.getElementById('show-all').addEventListener('click', function(){
+            processSearch();
+        })
+
+        const loadPhoneDetails = async id => {
+            const url = `https://openapi.programming-hero.com/api/phone/${id}`
+            const res = await fetch(url)
+            const data = await res.json()
+            displayPhoneDetails(data.data);
+        }
+
+        const displayPhoneDetails = (phone) => {
+            console.log(phone);
+            const modalTitle = document.getElementById('phone-name');
+            const imageBody = document.getElementById('image-body');
+            const chipset = document.getElementById('chipset');
+            const display = document.getElementById('display');
+            const memory = document.getElementById('memory');
+            const storage = document.getElementById('storage');
+            const sensor = document.getElementById('sensor');
+            const releasedDate = document.getElementById('released-date');
+            imageBody.classList.add("d-flex", "justify-content-center", "align-items-center", "mb-3")
+            imageBody.innerHTML = `
+            <img src="${phone.image}" alt="">
+            `
+            modalTitle.innerText = phone.name;
+            chipset.innerText = phone.mainFeatures.chipSet;
+            display.innerText = phone.mainFeatures.displaySize;
+            memory.innerText = phone.mainFeatures.memory;
+            storage.innerText = phone.mainFeatures.storage;
+            sensor.innerText = phone.mainFeatures.sensors[0];
+            releasedDate.innerText = phone.releaseDate ? phone.releaseDate : 'No Release Date Found';
+        }
+
+        loadPhone('apple');
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+  </body>
+</html>
