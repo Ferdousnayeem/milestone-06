@@ -59,7 +59,9 @@
                             <p>Display: <span id="display"></span> </p>
                             <p>Memory: <span id="memory"></span> </p>
                             <p>Storage: <span id="storage"></span> </p>
-                            <p>Sensor: <span id="sensor"></span> </p>
+                            <p>Sensor: 
+                            <ol id="sensor"></ol> 
+                            </p>
                             <p>Release Date: <span id="released-date"></span> </p>
                         </div>
                     </div>
@@ -171,18 +173,24 @@
             const display = document.getElementById('display');
             const memory = document.getElementById('memory');
             const storage = document.getElementById('storage');
-            const sensor = document.getElementById('sensor');
+            const sensors = document.getElementById('sensor');
+            sensors.innerHTML = '';
             const releasedDate = document.getElementById('released-date');
-            imageBody.classList.add("d-flex", "justify-content-center", "align-items-center", "mb-3")
+            imageBody.classList.add("d-flex", "justify-content-center", "align-items-center", "mb-3");
             imageBody.innerHTML = `
             <img src="${phone.image}" alt="">
-            `
+            `;
             modalTitle.innerText = phone.name;
             chipset.innerText = phone.mainFeatures.chipSet;
             display.innerText = phone.mainFeatures.displaySize;
             memory.innerText = phone.mainFeatures.memory;
             storage.innerText = phone.mainFeatures.storage;
-            sensor.innerText = phone.mainFeatures.sensors[0];
+            for(let i = 0; i < phone.mainFeatures.sensors.length; i++) {
+            const list = document.createElement('li');
+            list.innerHTML = '';
+            list.innerHTML = phone.mainFeatures.sensors[i];
+            sensors.appendChild(list);
+            }
             releasedDate.innerText = phone.releaseDate ? phone.releaseDate : 'No Release Date Found';
         }
 
